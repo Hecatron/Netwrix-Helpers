@@ -9,6 +9,7 @@ namespace WinEventLog.Exporter {
         public MainDialog() {
             InitializeComponent();
 
+            lblHostName.Text = Environment.MachineName.ToString();
             var dtnow = DateTime.Now;
             StartDTPicker.Value = dtnow;
             EndDTPicker.Value = dtnow;
@@ -16,12 +17,23 @@ namespace WinEventLog.Exporter {
             EndTimePicker.Value = new DateTime(dtnow.Year, dtnow.Month, dtnow.Day, 23, 59, 59);
         }
 
+        /// <summary> Pick a Destination. </summary>
+        /// <param name="sender"> Source of the event. </param>
+        /// <param name="e">      Event information. </param>
+        private void btDestination_Click(object sender, EventArgs e) {
+            var destdirDialog = new FolderBrowserDialog();
+            var result = destdirDialog.ShowDialog();
+            if (result == DialogResult.OK) {
+                tbFilePath.Text = destdirDialog.SelectedPath;
+            }
+        }
+
         /// <summary> Start processing. </summary>
         /// <param name="sender"> Source of the event. </param>
         /// <param name="e">      Event information. </param>
         private void StartButt_Click(object sender, EventArgs e) {
             var searchopts = GetSearchOpts();
-            var reader = new Reader(searchopts);
+            var reader = new EventLogProcessor.Exporter(searchopts);
 
             lblStatus.Text = "Reading event logs";
             Application.DoEvents();
@@ -37,7 +49,7 @@ namespace WinEventLog.Exporter {
 
         /// <summary> Gets the search options. </summary>
         /// <returns> The search options. </returns>
-        private SearchOpts GetSearchOpts() {
+        private ExporterOpts GetSearchOpts() {
             var sdp = StartDTPicker.Value;
             var stp = StartTimePicker.Value;
             var startdt = new DateTime(sdp.Year, sdp.Month, sdp.Day, stp.Hour, stp.Minute, stp.Second);
@@ -46,8 +58,10 @@ namespace WinEventLog.Exporter {
             var etp = EndTimePicker.Value;
             var enddt = new DateTime(edp.Year, edp.Month, edp.Day, etp.Hour, etp.Minute, etp.Second);
 
-            var ret = new SearchOpts(startdt, enddt, chkSecurity.Checked);
+            var ret = new ExporterOpts(startdt, enddt, chkApplication.Checked, chkSystem.Checked, chkSecurity.Checked,
+                tbFilePath.Text, lblHostName.Text);
             return ret;
         }
+
     }
 }
