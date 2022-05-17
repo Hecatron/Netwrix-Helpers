@@ -29,7 +29,7 @@ namespace WinEventLog.Exporter.LogExporter {
 
             switch (entry.EntryType) {
                 case EventLogEntryType.Information:
-                    nnt_entrytype = "notice ";
+                    nnt_entrytype = "info ";
                     break;
                 case EventLogEntryType.Warning:
                     nnt_entrytype = "warning ";
@@ -53,7 +53,6 @@ namespace WinEventLog.Exporter.LogExporter {
                 nnt_entrytype = "notice ";
             if (entry.InstanceId == 0)
                 nnt_entrytype = "notice ";
-
 
             sb.Append(nnt_entrytype);
             sb.Append("Location: ");
