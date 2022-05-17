@@ -47,13 +47,8 @@ namespace WinEventLog.Exporter.LogExporter {
             }
 
             // Special Cases
-            if (LogSource == "Security" && entry.InstanceId == 4688)
+            if (entry.InstanceId == 4688)
                 nnt_entrytype = "warning ";
-            if (LogSource == "Application" && entry.InstanceId == 20)
-                nnt_entrytype = "notice ";
-            if (LogSource == "Application" && entry.InstanceId == 0)
-                nnt_entrytype = "notice ";
-
 
             sb.Append(nnt_entrytype);
             sb.Append("Location: ");
