@@ -1,10 +1,12 @@
 using System.Net;
-using WinEventLog.Exporter.EventLogProcessor;
+using WinEventLog.Exporter.LogExporter;
 
 namespace WinEventLog.Exporter {
 
     /// <summary> Main Dialoge. </summary>
     public partial class MainDialog : Form {
+
+        private long RecordCount { get; set; }
 
         /// <summary> Default constructor. </summary>
         public MainDialog() {
@@ -17,6 +19,7 @@ namespace WinEventLog.Exporter {
             StartTimePicker.Value = new DateTime(dtnow.Year, dtnow.Month, dtnow.Day, 0, 0, 0);
             EndTimePicker.Value = new DateTime(dtnow.Year, dtnow.Month, dtnow.Day, 23, 59, 59);
             GetIPs();
+            RecordCount = 0;
         }
 
         /// <summary> Get the local IP Address's </summary>
@@ -53,28 +56,32 @@ namespace WinEventLog.Exporter {
         /// <param name="sender"> Source of the event. </param>
         /// <param name="e">      Event information. </param>
         private void StartButt_Click(object sender, EventArgs e) {
+            RecordCount = 0;
             if (chkApplication.Checked) {
-                var opts = GetProcessorOpts("Application", "user");
-                var proc = new Processor(opts);
+                var opts = GetExporterOpts("Application.log");
+                var proc = new ExporterAppLog(opts);
                 UpdateStatus("Reading Application event logs");
                 proc.Read();
+                RecordCount += proc.Count;
                 UpdateStatus("Records Found:" + proc.Count + " Beginning Export: Application Logs");
                 proc.ExportLogs();
             }
             if (chkSystem.Checked) {
-                var opts = GetProcessorOpts("System", "system");
-                var proc = new Processor(opts);
+                var opts = GetExporterOpts("System.log");
+                var proc = new ExporterSysLog(opts);
                 UpdateStatus("Reading System event logs");
                 proc.Read();
+                RecordCount += proc.Count;
                 UpdateStatus("Records Found:" + proc.Count + " Beginning Export: System Logs");
                 proc.ExportLogs();
             }
             if (chkSecurity.Checked) {
                 // Requires Privilege escalation to Admin
-                var opts = GetProcessorOpts("Security", "security");
-                var proc = new Processor(opts);
+                var opts = GetExporterOpts("Security.log");
+                var proc = new ExporterSecurityLog(opts);
                 UpdateStatus("Reading Security event logs");
                 proc.Read();
+                RecordCount += proc.Count;
                 UpdateStatus("Records Found:" + proc.Count + " Beginning Export: Security Logs");
                 proc.ExportLogs();
             }
@@ -86,13 +93,14 @@ namespace WinEventLog.Exporter {
         /// <param name="status_str"> The status string. </param>
         private void UpdateStatus(string status_str) {
             lblStatus.Text = status_str;
+            lblCount.Text = RecordCount.ToString();
             Application.DoEvents();
         }
 
         /// <summary> Gets the search options. </summary>
         /// <returns> The search options. </returns>
-        private ProcessorOpts GetProcessorOpts(string logsource, string nntsource) {
-            var opts = new ProcessorOpts();
+        private ExporterOpts GetExporterOpts(string filename) {
+            var opts = new ExporterOpts();
 
             var sdp = StartDTPicker.Value;
             var stp = StartTimePicker.Value;
@@ -105,8 +113,6 @@ namespace WinEventLog.Exporter {
             opts.StartDateTime = startdt;
             opts.EndDateTime = enddt;
             opts.HostName = lblHostName.Text;
-            opts.LogSource = logsource;
-            opts.NNTSource = nntsource;
 
             var selectedip = cbIPs.SelectedItem.ToString();
             if (selectedip != null)
@@ -114,7 +120,7 @@ namespace WinEventLog.Exporter {
             else
                 opts.IPAddress = "X.X.X.X";
 
-            opts.ExportFilePath = Path.Combine(tbDirPath.Text, logsource + ".log");
+            opts.ExportFilePath = Path.Combine(tbDirPath.Text, filename);
             return opts;
         }
     }
