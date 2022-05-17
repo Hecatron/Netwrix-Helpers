@@ -5,102 +5,68 @@ using System.Text;
 namespace WinEventLog.Exporter.EventLogProcessor {
 
     /// <summary> Event Log Reader. </summary>
-    public class Exporter {
+    public class Processor {
 
         /// <summary> Search Options. </summary>
-        private ExporterOpts _Opts;
+        private ProcessorOpts _Opts;
 
-        /// <summary> Application Event log entries. </summary>
-        private List<EventLogEntry> _AppLogs;
-
-        /// <summary> System Event log entries. </summary>
-        private List<EventLogEntry> _SystemLogs;
-
-        /// <summary> Security Event log entries. </summary>
-        private List<EventLogEntry> _SecurityLogs;
+        /// <summary> Event log entries. </summary>
+        private List<EventLogEntry> _LogEntries;
 
         /// <summary> Number of log entries found. </summary>
         public long Count;
 
         /// <summary> Constructor. </summary>
         /// <param name="opts"> Search Options. </param>
-        public Exporter(ExporterOpts opts) {
+        public Processor(ProcessorOpts opts) {
             _Opts = opts;
-            _AppLogs = new List<EventLogEntry>();
-            _SystemLogs = new List<EventLogEntry>();
-            _SecurityLogs = new List<EventLogEntry>();
+            _LogEntries = new List<EventLogEntry>();
         }
 
-        /// <summary> Read the logs from each of the sources. </summary>
+        /// <summary> Read the log entries from the log source. </summary>
         public void Read() {
-
-            // Read in non admin event logs
-            if (_Opts.ReadApplicationLogs)
-                _AppLogs = GetLogs("Application");
-            if (_Opts.ReadSystemLogs)
-                _SystemLogs = GetLogs("System");
-
-            // This needs admin priviledges
-            if (_Opts.ReadSecurityLogs)
-                _SecurityLogs = GetLogs("Security");
-
-            Count = _AppLogs.Count + _SystemLogs.Count + _SecurityLogs.Count;
-        }
-
-        /// <summary> Gets the logs from a specific source. </summary>
-        /// <param name="srcname"> The event source to pull from. </param>
-        private List<EventLogEntry> GetLogs(string srcname) {
-            var ret = new List<EventLogEntry>();
-            EventLog log = new EventLog(srcname);
+            EventLog log = new EventLog(_Opts.LogSource);
             var entries = log.Entries.Cast<EventLogEntry>()
                 .Where(x => x.TimeGenerated >= _Opts.StartDateTime)
                 .Where(x => x.TimeGenerated <= _Opts.EndDateTime)
                 .ToList();
-            ret.AddRange(entries);
+            _LogEntries.AddRange(entries);
 
             // Sort by datetime
-            var sorted = from item in ret
-                orderby item.TimeGenerated
-                select item;
-            ret = sorted.ToList();
-            return ret;
+            var sorted = from item in _LogEntries
+                         orderby item.TimeGenerated
+                         select item;
+            _LogEntries = sorted.ToList();
+            Count = _LogEntries.Count;
         }
 
         /// <summary> Export logs to a file. </summary>
         public void ExportLogs() {
-            if (_Opts.ReadApplicationLogs)
-                ExportLog(_Opts.HostName + "-Application.log", "user", _AppLogs);
-            if (_Opts.ReadSystemLogs)
-                ExportLog(_Opts.HostName + "-System.log", "system", _SystemLogs);
-            if (_Opts.ReadSecurityLogs)
-                ExportLog(_Opts.HostName = "-Security.log", "security", _SecurityLogs);
-        }
-
-        /// <summary> Export logs to a file. </summary>
-        public void ExportLog(string filename, string sourcename, List<EventLogEntry> logentries) {
-            var filepath = Path.Combine(_Opts.ExportSaveDir, filename);
-            using (StreamWriter writetext = new StreamWriter(filepath)) {
+            using (StreamWriter writetext = new StreamWriter(_Opts.ExportFilePath)) {
 
                 // TODO
 
-                var log = _AppLogs[0];
-                var logstr = ExportLogString(sourcename, log);
-                writetext.WriteLine(logstr);
+                var log = _LogEntries[0];
+                var logst = ExportLogString(log);
+                writetext.WriteLine(logst);
 
-                //foreach (EventLogEntry log in logentries) {
-                //    var logstr = ExportLogString(log);
+                //foreach (EventLogEntry entry in _LogEntries) {
+                //    var logstr = ExportLogString(entry);
                 //    writetext.WriteLine(logstr);
                 //}
             }
         }
 
-        private string ExportLogString(string sourcename, EventLogEntry entry) {
+        /// <summary> Generate a line from a single log entry. </summary>
+        /// <param name="entry"> The event log entry. </param>
+        /// <returns> The string needed for the export. </returns>
+        private string ExportLogString(EventLogEntry entry) {
             // TODO IP address
 
             var sb = new StringBuilder();
             sb.Append(entry.TimeWritten.ToString("yyyy/MM/dd HH:mm:ss "));
             sb.Append("TODO_IP ");
-            sb.Append(sourcename);
+            sb.Append(_Opts.LogSource);
             sb.Append(' ');
 
             switch (entry.EntryType) {
@@ -128,8 +94,8 @@ namespace WinEventLog.Exporter.EventLogProcessor {
             sb.Append(_Opts.HostName);
             sb.Append(" - ");
 
-
-
+            // TODO Add this in
+            //_Opts.NNTSource
 
             // TODO
 

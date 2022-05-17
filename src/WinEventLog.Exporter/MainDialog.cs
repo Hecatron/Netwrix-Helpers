@@ -24,7 +24,7 @@ namespace WinEventLog.Exporter {
             var destdirDialog = new FolderBrowserDialog();
             var result = destdirDialog.ShowDialog();
             if (result == DialogResult.OK) {
-                tbFilePath.Text = destdirDialog.SelectedPath;
+                tbDirPath.Text = destdirDialog.SelectedPath;
             }
         }
 
@@ -32,24 +32,47 @@ namespace WinEventLog.Exporter {
         /// <param name="sender"> Source of the event. </param>
         /// <param name="e">      Event information. </param>
         private void StartButt_Click(object sender, EventArgs e) {
-            var searchopts = GetSearchOpts();
-            var reader = new EventLogProcessor.Exporter(searchopts);
+            if (chkApplication.Checked) {
+                var opts = GetProcessorOpts("Application", "user");
+                var proc = new Processor(opts);
+                UpdateStatus("Reading Application event logs");
+                proc.Read();
+                UpdateStatus("Records Found:" + proc.Count + " Beginning Export: Application Logs");
+                proc.ExportLogs();
+            }
+            if (chkSystem.Checked) {
+                var opts = GetProcessorOpts("System", "system");
+                var proc = new Processor(opts);
+                UpdateStatus("Reading System event logs");
+                proc.Read();
+                UpdateStatus("Records Found:" + proc.Count + " Beginning Export: System Logs");
+                proc.ExportLogs();
+            }
+            if (chkSecurity.Checked) {
+                // Requires Privilege escalation to Admin
+                var opts = GetProcessorOpts("Security", "security");
+                var proc = new Processor(opts);
+                UpdateStatus("Reading Security event logs");
+                proc.Read();
+                UpdateStatus("Records Found:" + proc.Count + " Beginning Export: Security Logs");
+                proc.ExportLogs();
+            }
 
-            lblStatus.Text = "Reading event logs";
+            UpdateStatus("Done");
+        }
+
+        /// <summary> Updates the status. </summary>
+        /// <param name="status_str"> The status string. </param>
+        private void UpdateStatus(string status_str) {
+            lblStatus.Text = status_str;
             Application.DoEvents();
-            reader.Read();
-
-            lblCount.Text = reader.Count.ToString();
-            lblStatus.Text = "Exporting to File";
-            Application.DoEvents();
-            reader.ExportLogs();
-
-            lblStatus.Text = "Idle";
         }
 
         /// <summary> Gets the search options. </summary>
         /// <returns> The search options. </returns>
-        private ExporterOpts GetSearchOpts() {
+        private ProcessorOpts GetProcessorOpts(string logsource, string nntsource) {
+            var opts = new ProcessorOpts();
+
             var sdp = StartDTPicker.Value;
             var stp = StartTimePicker.Value;
             var startdt = new DateTime(sdp.Year, sdp.Month, sdp.Day, stp.Hour, stp.Minute, stp.Second);
@@ -58,10 +81,13 @@ namespace WinEventLog.Exporter {
             var etp = EndTimePicker.Value;
             var enddt = new DateTime(edp.Year, edp.Month, edp.Day, etp.Hour, etp.Minute, etp.Second);
 
-            var ret = new ExporterOpts(startdt, enddt, chkApplication.Checked, chkSystem.Checked, chkSecurity.Checked,
-                tbFilePath.Text, lblHostName.Text);
-            return ret;
+            opts.StartDateTime = startdt;
+            opts.EndDateTime = enddt;
+            opts.HostName = lblHostName.Text;
+            opts.LogSource = logsource;
+            opts.NNTSource = nntsource;
+            opts.ExportFilePath = Path.Combine(tbDirPath.Text, logsource + ".log");
+            return opts;
         }
-
     }
 }
