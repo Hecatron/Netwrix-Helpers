@@ -38,6 +38,8 @@
             this.chkApplication = new System.Windows.Forms.CheckBox();
             this.chkSystem = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.cbIPs = new System.Windows.Forms.ComboBox();
             this.btDestination = new System.Windows.Forms.Button();
             this.tbDirPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -196,6 +198,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.cbIPs);
             this.groupBox1.Controls.Add(this.btDestination);
             this.groupBox1.Controls.Add(this.tbDirPath);
             this.groupBox1.Controls.Add(this.label1);
@@ -212,15 +216,32 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox1.Size = new System.Drawing.Size(1258, 410);
+            this.groupBox1.Size = new System.Drawing.Size(1257, 473);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settings";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(41, 341);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(158, 41);
+            this.label7.TabIndex = 21;
+            this.label7.Text = "IP Address";
+            // 
+            // cbIPs
+            // 
+            this.cbIPs.FormattingEnabled = true;
+            this.cbIPs.Location = new System.Drawing.Point(212, 338);
+            this.cbIPs.Name = "cbIPs";
+            this.cbIPs.Size = new System.Drawing.Size(490, 49);
+            this.cbIPs.TabIndex = 20;
+            // 
             // btDestination
             // 
             this.btDestination.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btDestination.Location = new System.Drawing.Point(1130, 322);
+            this.btDestination.Location = new System.Drawing.Point(1129, 394);
             this.btDestination.Margin = new System.Windows.Forms.Padding(6);
             this.btDestination.Name = "btDestination";
             this.btDestination.Size = new System.Drawing.Size(115, 59);
@@ -233,17 +254,17 @@
             // 
             this.tbDirPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbDirPath.Location = new System.Drawing.Point(212, 324);
+            this.tbDirPath.Location = new System.Drawing.Point(212, 396);
             this.tbDirPath.Margin = new System.Windows.Forms.Padding(6);
             this.tbDirPath.Name = "tbDirPath";
-            this.tbDirPath.Size = new System.Drawing.Size(901, 47);
+            this.tbDirPath.Size = new System.Drawing.Size(900, 47);
             this.tbDirPath.TabIndex = 18;
             this.tbDirPath.Text = "C:\\D\\Temp\\14";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 330);
+            this.label1.Location = new System.Drawing.Point(54, 396);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(146, 41);
@@ -261,11 +282,11 @@
             this.groupBox2.Controls.Add(this.StartButt);
             this.groupBox2.Controls.Add(this.lblCount);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(38, 484);
+            this.groupBox2.Location = new System.Drawing.Point(38, 524);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox2.Size = new System.Drawing.Size(1245, 377);
+            this.groupBox2.Size = new System.Drawing.Size(1245, 337);
             this.groupBox2.TabIndex = 17;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Status";
@@ -331,5 +352,7 @@
         private Label label1;
         private Label lblHostName;
         private Label label6;
+        private Label label7;
+        private ComboBox cbIPs;
     }
 }

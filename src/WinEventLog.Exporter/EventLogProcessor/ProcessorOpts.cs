@@ -19,6 +19,10 @@
         /// <value> HostName used for the logs. </value>
         public string HostName { get; set; } = "";
 
+        /// <summary> IP Address used for the logs. </summary>
+        /// <value> The IP address. </value>
+        public string IPAddress { get; set; } = "";
+
         /// <summary> Log Source such as Application, System, Security used to pull from Windows. </summary>
         /// <value> The log source. </value>
         public string LogSource { get; set; } = "";

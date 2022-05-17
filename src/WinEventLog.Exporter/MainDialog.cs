@@ -1,3 +1,4 @@
+using System.Net;
 using WinEventLog.Exporter.EventLogProcessor;
 
 namespace WinEventLog.Exporter {
@@ -15,6 +16,26 @@ namespace WinEventLog.Exporter {
             EndDTPicker.Value = dtnow;
             StartTimePicker.Value = new DateTime(dtnow.Year, dtnow.Month, dtnow.Day, 0, 0, 0);
             EndTimePicker.Value = new DateTime(dtnow.Year, dtnow.Month, dtnow.Day, 23, 59, 59);
+            GetIPs();
+        }
+
+        /// <summary> Get the local IP Address's </summary>
+        private void GetIPs() {
+            var hostname = Environment.MachineName.ToString();
+            var ipEntry = Dns.GetHostEntry(hostname);
+            var addr = ipEntry.AddressList;
+
+            // Only list IP4 address's
+            var result = from item in addr
+                         where item.IsIPv6LinkLocal == false
+                         select item;
+
+            cbIPs.Items.Clear();
+            foreach (var item in result) {
+                cbIPs.Items.Add(item.ToString());
+            }
+            if (cbIPs.Items.Count > 0)
+                cbIPs.SelectedIndex = 0;
         }
 
         /// <summary> Pick a Destination. </summary>
@@ -86,6 +107,13 @@ namespace WinEventLog.Exporter {
             opts.HostName = lblHostName.Text;
             opts.LogSource = logsource;
             opts.NNTSource = nntsource;
+
+            var selectedip = cbIPs.SelectedItem.ToString();
+            if (selectedip != null)
+                opts.IPAddress = selectedip;
+            else
+                opts.IPAddress = "X.X.X.X";
+
             opts.ExportFilePath = Path.Combine(tbDirPath.Text, logsource + ".log");
             return opts;
         }
