@@ -41,16 +41,27 @@
 
             while(LogsAvailable()) {
 
-                // TODO
-                foreach (var file in _logfiles) {
-                    while(file.EndOfFile == false) {
-                        file.ReadLine();
-                        if (file.EndOfFile == false) {
-                            _writer.WriteLine(file.CurrentLine);
-                        }
-                    }
+                // Merge sorting by Date / Time
+                var logfiles = from item in _logfiles
+                               where item.EndOfFile == false
+                               orderby item.CurrentDttm
+                               select item;
+
+                var logfile = logfiles.FirstOrDefault();
+                if (logfile != null) {
+                    _writer.WriteLine(logfile.CurrentLine);
+                    logfile.ReadLine();
                 }
 
+                // Merge one after the other
+                //foreach (var file in _logfiles) {
+                //    while(file.EndOfFile == false) {
+                //        file.ReadLine();
+                //        if (file.EndOfFile == false) {
+                //            _writer.WriteLine(file.CurrentLine);
+                //        }
+                //    }
+                //}
             }
             _writer.Close();
         }
