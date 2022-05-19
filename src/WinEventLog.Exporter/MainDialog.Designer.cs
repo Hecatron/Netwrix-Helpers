@@ -28,7 +28,6 @@
             this.EndDTPicker = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.StartTimePicker = new System.Windows.Forms.DateTimePicker();
             this.EndTimePicker = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
             this.lblCount = new System.Windows.Forms.Label();
@@ -46,6 +45,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblHostName = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.StartTimePicker = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -68,6 +68,7 @@
             this.StartDTPicker.Name = "StartDTPicker";
             this.StartDTPicker.Size = new System.Drawing.Size(389, 47);
             this.StartDTPicker.TabIndex = 1;
+            this.StartDTPicker.Value = new System.DateTime(2022, 5, 7, 1, 0, 0, 0);
             // 
             // EndDTPicker
             // 
@@ -76,6 +77,7 @@
             this.EndDTPicker.Name = "EndDTPicker";
             this.EndDTPicker.Size = new System.Drawing.Size(389, 47);
             this.EndDTPicker.TabIndex = 2;
+            this.EndDTPicker.Value = new System.DateTime(2022, 5, 7, 0, 0, 0, 0);
             // 
             // label2
             // 
@@ -96,16 +98,6 @@
             this.label3.Size = new System.Drawing.Size(141, 41);
             this.label3.TabIndex = 5;
             this.label3.Text = "End Time";
-            // 
-            // StartTimePicker
-            // 
-            this.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.StartTimePicker.Location = new System.Drawing.Point(419, 53);
-            this.StartTimePicker.Margin = new System.Windows.Forms.Padding(6);
-            this.StartTimePicker.Name = "StartTimePicker";
-            this.StartTimePicker.ShowUpDown = true;
-            this.StartTimePicker.Size = new System.Drawing.Size(219, 47);
-            this.StartTimePicker.TabIndex = 6;
             // 
             // EndTimePicker
             // 
@@ -160,6 +152,8 @@
             // chkSecurity
             // 
             this.chkSecurity.AutoSize = true;
+            this.chkSecurity.Checked = true;
+            this.chkSecurity.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSecurity.Location = new System.Drawing.Point(13, 275);
             this.chkSecurity.Margin = new System.Windows.Forms.Padding(6);
             this.chkSecurity.Name = "chkSecurity";
@@ -198,6 +192,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.StartTimePicker);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.cbIPs);
             this.groupBox1.Controls.Add(this.btDestination);
@@ -210,7 +205,6 @@
             this.groupBox1.Controls.Add(this.chkSecurity);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.StartTimePicker);
             this.groupBox1.Controls.Add(this.EndTimePicker);
             this.groupBox1.Location = new System.Drawing.Point(26, 25);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
@@ -259,7 +253,7 @@
             this.tbDirPath.Name = "tbDirPath";
             this.tbDirPath.Size = new System.Drawing.Size(900, 47);
             this.tbDirPath.TabIndex = 18;
-            this.tbDirPath.Text = "C:\\D\\Temp\\14";
+            this.tbDirPath.Text = "D:\\transfer";
             // 
             // label1
             // 
@@ -311,6 +305,16 @@
             this.label6.TabIndex = 18;
             this.label6.Text = "Host Name:";
             // 
+            // StartTimePicker
+            // 
+            this.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.StartTimePicker.Location = new System.Drawing.Point(419, 52);
+            this.StartTimePicker.Margin = new System.Windows.Forms.Padding(6);
+            this.StartTimePicker.Name = "StartTimePicker";
+            this.StartTimePicker.ShowUpDown = true;
+            this.StartTimePicker.Size = new System.Drawing.Size(219, 47);
+            this.StartTimePicker.TabIndex = 22;
+            // 
             // MainDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(17F, 41F);
@@ -336,7 +340,6 @@
         private DateTimePicker EndDTPicker;
         private Label label2;
         private Label label3;
-        private DateTimePicker StartTimePicker;
         private DateTimePicker EndTimePicker;
         private Label label4;
         private Label lblCount;
@@ -354,5 +357,6 @@
         private Label label6;
         private Label label7;
         private ComboBox cbIPs;
+        private DateTimePicker StartTimePicker;
     }
 }

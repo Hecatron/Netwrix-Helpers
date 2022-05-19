@@ -13,8 +13,6 @@ namespace WinEventLog.Exporter.LogExporter {
             LogSource = "Application";
         }
 
-        // TODO
-
         /// <summary> Generate a line from a single log entry. </summary>
         /// <param name="entry"> The event log entry. </param>
         /// <returns> The string needed for the export. </returns>

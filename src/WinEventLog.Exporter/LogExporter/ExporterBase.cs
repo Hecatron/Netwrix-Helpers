@@ -52,6 +52,9 @@ namespace WinEventLog.Exporter.LogExporter {
             using (StreamWriter writetext = new StreamWriter(_Opts.ExportFilePath)) {
                 foreach (EventLogEntry entry in _LogEntries) {
                     var logstr = ProcessLogEntry(entry);
+                    // Exclude lines with this
+                    if (logstr.Contains("ekrn.exe"))
+                        continue;
                     writetext.WriteLine(logstr);
                 }
             }

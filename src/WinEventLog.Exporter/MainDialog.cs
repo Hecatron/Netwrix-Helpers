@@ -14,8 +14,8 @@ namespace WinEventLog.Exporter {
 
             lblHostName.Text = Environment.MachineName.ToString();
             var dtnow = DateTime.Now;
-            StartDTPicker.Value = dtnow;
-            EndDTPicker.Value = dtnow;
+            //StartDTPicker.Value = dtnow;
+            //EndDTPicker.Value = dtnow;
             StartTimePicker.Value = new DateTime(dtnow.Year, dtnow.Month, dtnow.Day, 0, 0, 0);
             EndTimePicker.Value = new DateTime(dtnow.Year, dtnow.Month, dtnow.Day, 23, 59, 59);
             GetIPs();
@@ -120,7 +120,7 @@ namespace WinEventLog.Exporter {
             else
                 opts.IPAddress = "X.X.X.X";
 
-            opts.ExportFilePath = Path.Combine(tbDirPath.Text, filename);
+            opts.ExportFilePath = Path.Combine(tbDirPath.Text, opts.HostName + "-" + filename);
             return opts;
         }
     }
